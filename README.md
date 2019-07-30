@@ -1,3 +1,9 @@
+# STARTEAM 6.0
+--------------
+This fork is designed to work *only* with StarTeam 6.0 which has a strictly limited set of features compared to newer StarTeam SDKs (8.0 and above, for example).
+--------------
+
+
 Git-StarTeam imports [StarTeam](http://www.borland.com/products/starteam/)
 projects into [Git](http://git-scm.com).
 
@@ -23,8 +29,7 @@ Git-StarTeam use an ant script to build its jar file.
     cd ~/proj/git-starteam/
     ant -Djargs.jar=/path/to/jargs.jar -Dstarteam.jar=/path/to/starteam.jar jar
 
-StarTeam SDK versions 8.0, 10.4 and 11.0 are known to work. Version 12.5 is
-not compatible.
+This fork is designed to work only with Starteam 6.0
 
 Tune OS
 -------
