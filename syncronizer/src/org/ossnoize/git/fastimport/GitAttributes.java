@@ -87,14 +87,14 @@ public class GitAttributes {
     fileContent.get(cleanPath).addAll(tempList);
   }
   
-  public void removeAttributeFromPath(String path, GitAttributeKind ... allAttributes){
+  public void removeAttributeFromPath(String path, GitAttributeKind attributes){
 	  String cleanPath = escapeSpace(path);
 	  
 	  if(!fileContent.containsKey(cleanPath)){
 		  return;
 	  }
 	  
-	  fileContent.get(cleanPath).removeAll(Arrays.asList(allAttributes));
+	  fileContent.get(cleanPath).remove(attributes);
   }
   
   @Override
