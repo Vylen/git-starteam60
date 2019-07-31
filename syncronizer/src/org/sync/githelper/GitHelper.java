@@ -136,7 +136,7 @@ public class GitHelper extends RepositoryHelper {
 			return true;
 		} else if (create) {
 			ProcessBuilder process = new ProcessBuilder();
-			process.command(gitExecutable, "init", "--bare");
+			process.command(gitExecutable, "init");
 			process.directory(new File(repositoryDir));
 			try {
 				Process init = process.start();
