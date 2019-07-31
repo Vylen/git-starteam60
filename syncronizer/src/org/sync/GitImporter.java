@@ -86,7 +86,7 @@ public class GitImporter {
 	private DataRef fromRef = null;
 	private boolean verbose = false;
 	private boolean createCheckpoints = false;
-	private boolean setEOLAttribute = false;
+	private boolean EOLAttribute = false;
 	private RepositoryHelper repositoryHelper;
 	// Use these sets to find all the deleted files.
 	private Set<String> lastFiles = new HashSet<String>();
@@ -171,10 +171,10 @@ public class GitImporter {
 
 		// http://techpubs.borland.com/starteam/2009/en/sdk_documentation/api/com/starbase/starteam/CheckoutManager.html
 		// said old version (passed in /opt/StarTeamCP_2005r2/lib/starteam80.jar) "Deprecated. Use View.createCheckoutManager() instead."
-		CheckoutManager cm = new CheckoutManager(view);
-		cm.getOptions().setEOLConversionEnabled(false);
+		//CheckoutManager cm = new CheckoutManager(view);
+		//cm.getOptions().setEOLConversionEnabled(false);
 		// Disabling status update leads to a large performance increase.
-		cm.getOptions().setUpdateStatus(false);
+		//cm.getOptions().setUpdateStatus(false);
 		lastInformation = new CommitInformation(new java.util.Date(0), Integer.MIN_VALUE, "", "");
 
 		folder = null;
@@ -265,7 +265,8 @@ public class GitImporter {
 				} else {
 					java.io.File aFile = TempFileManager.getInstance().createTempFile("StarteamFile", ".tmp");
 					try {
-						cm.checkoutTo(f, aFile);
+						f.checkoutTo(aFile, 3, true, false, false);
+						//cm.checkoutTo(f, aFile);
 					} catch (Exception ex) {
 						Log.logf("Failed to checkout %s: %s", path, ex);
 						continue;
@@ -278,7 +279,7 @@ public class GitImporter {
 					if(aFile.length() < lfsMinimumSize && !matchPattern) {
 						fileData = new Data(aFile);
 					
-						if(setEOLAttribute){
+						if(EOLAttribute){
 							try{
 								if (null != lastCommit) {
 									fattributes = lastCommit.getAttributes();
@@ -289,14 +290,17 @@ public class GitImporter {
 								
 								Object propertyValue = f.get(f.getPropertyNames().FILE_EOL_CHARACTER);
 								if(StarteamEOL.CLIENTDEFINE.value() == (Integer) propertyValue){
-									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF);
 								}
 								else if(StarteamEOL.CRLF.value() == (Integer) propertyValue){
-									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF);
 									fattributes.addAttributeToPath(current.getPath(), GitAttributeKind.CRLF);
 								}
 								else if(StarteamEOL.LF.value() == (Integer) propertyValue){
-									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.LF);
+									fattributes.removeAttributeFromPath(path, GitAttributeKind.CRLF);
 									fattributes.addAttributeToPath(current.getPath(), GitAttributeKind.LF);
 								}
 							}catch(NoSuchPropertyException ex){
@@ -480,7 +484,7 @@ public class GitImporter {
 				//				Log.log("The starteam view specified was empty.");
 			}
 		}
-		cm = null;
+		//cm = null;
 		folder.discardItems(server.getTypeNames().FILE, -1);
 	}
 
@@ -571,7 +575,7 @@ public class GitImporter {
 		List<Label> revisionLabels = new ArrayList<Label>();
 		
 		for(Label label : labels){
-			if (label.isRevisionLabel() && label.getDescription().contains(buildDateToken)
+			if (label.isRevisionLabel() 
 			    && !excludedLabelSet.contains(label.getName())) {
 				if (filteringLabelPattern != null && !filteringLabelPattern.isEmpty()) {
 					if (Pattern.matches(filteringLabelPattern, label.getName())) {
@@ -680,7 +684,7 @@ public class GitImporter {
 				writeLabelTag(view, revisionLabels[i]);
 			}
 			checkpoint();
-			vc.close();
+			//vc.close();
 		}
 	}
 
@@ -745,7 +749,7 @@ public class GitImporter {
 				writeLabelTag(view, viewLabels[i]);
 			}
 			checkpoint();
-			vc.close();
+			//vc.close();
 		}
 	}
 
@@ -761,7 +765,7 @@ public class GitImporter {
 				writeLabelTag(view, viewLabels[i]);
 				checkpoint();
 
-				vc.close();
+				//vc.close();
 			}
 		}
 	}
@@ -853,7 +857,7 @@ public class GitImporter {
 				baseStrategy.filePopulation(alternateHead, folder);
 				lastFiles.addAll(baseStrategy.getLastFiles());
 				startDate = new java.util.Date(baseStrategy.getListOfCommit().lastKey().getTime());
-				baseView.close();
+				//baseView.close();
 			}
 			lastCommit = null;
 			isResume = false;
@@ -863,7 +867,7 @@ public class GitImporter {
 			CheckoutStrategy.setLastCommitTime(startDate);
 			generateAllLabelImport(view, baseFolder);
 
-			view.close();
+			//view.close();
 		}
 	}
 
@@ -1006,7 +1010,7 @@ public class GitImporter {
 			}
 			Log.log("View Configuration Time: " + timeIncrement.getTime());
 			generateFastImportStream(vc, baseFolder);
-			vc.close();
+			//vc.close();
 		}
 	}
 
@@ -1103,6 +1107,6 @@ public class GitImporter {
 	 * 				  false to leave it client base
 	 */
 	public void setEOLAttribute(boolean EOLAttribute){
-		this.setEOLAttribute = EOLAttribute;
+		this.EOLAttribute = EOLAttribute;
 	}
 }
