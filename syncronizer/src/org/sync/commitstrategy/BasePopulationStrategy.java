@@ -72,7 +72,7 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 		// make sure to get it's version 1. Setting the following value to 0 would
 		// grab all the version of the files since its creation
 		initialFileVersion = -1;
-		lookIntoRecycleBin = true;
+		lookIntoRecycleBin = false;
 	}
 
 	@Override
@@ -331,7 +331,7 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 						Log.logf("Coulfd not find deleted files <%s> ID: %d [%s]", path, fileID, e.getMessage());
 					}
 				}
-				if(null != item && item.isDeleted()) {
+				if(null != item && false /*item.isDeleted()*/) {
 					deletedpaths.add(new Pair<String, File>(path, item));
 					ith.remove();
 				} else {
@@ -386,15 +386,15 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 			PropertyNames propNames = currentView.getPropertyNames();
 			String[] populateProps = new String[] {
 					propNames.FILE_NAME,
-					PropertyNames.ITEM_DELETED_TIME,
-					PropertyNames.ITEM_DELETED_USER_ID,
+					//PropertyNames.ITEM_DELETED_TIME,
+					//PropertyNames.ITEM_DELETED_USER_ID,
 			};
 			try {
 				items.populateNow(populateProps);
 			} catch (com.starbase.starteam.NoSuchPropertyException e) {
 				Log.log("Could not populate the deleted files information");
 			}
-			for (int i = 0; i < deletedpaths.size(); i++) {
+			/*for (int i = 0; i < deletedpaths.size(); i++) {
 				File item = deletedpaths.get(i).getSecond();
 				CommitInformation info = new CommitInformation(item.getDeletedTime().createDate(),
 						item.getDeletedUserID(),
@@ -406,7 +406,7 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 				info.setFileDelete(true);
 				// Deleted files won't have entries, so add one here to make the delete end up in a commit.
 				currentCommitList.put(info, item);
-			}
+			}*/
 		}
 	}
 
@@ -416,12 +416,12 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 	 * @return The recycle Bin instance if supported.
 	 */
 	protected RecycleBin recoverRecycleBin(Folder root) {
-		if (lookIntoRecycleBin) {
+	/*	if (lookIntoRecycleBin) {
 			RecycleBin recycleBin;
 			recycleBin = root.getView().getRecycleBin();
 			recycleBin.setIncludeDeletedItems(true);
 			return recycleBin;
-		}
+		}*/
 		return null;
 	}
 
@@ -589,7 +589,7 @@ public class BasePopulationStrategy implements CommitPopulationStrategy {
 		return true;
 	}
 
-	@Override
+	//@Override
 	public void setFileRemoveExtendedInformation(boolean enable) {
 		lookIntoRecycleBin = enable;
 	}

@@ -69,9 +69,10 @@ public class LabelDumper {
 		starteam.connect();
 
 		// try to reconnect at 15 second intervals for 1 hour
-		starteam.setAutoReconnectEnabled(true);
-		starteam.setAutoReconnectAttempts(60 * 60 / 15);
-		starteam.setAutoReconnectWait(15);
+		starteam.setKeepAlive(true);
+		starteam.setKeepAliveInterval(1);
+		//starteam.setAutoReconnectAttempts(60 * 60 / 15);
+		//starteam.setAutoReconnectWait(15);
 
 		Console con = System.console();
 		if(null == user) {
